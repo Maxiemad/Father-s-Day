@@ -41,7 +41,7 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(rgba(201,136,46,.13) 1.1px, transparent 1.2px);background-size:24px 24px;opacity:.5;}
 #app{position:fixed;inset:0;z-index:10;}
 
-.step{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
+.step{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:safe center;text-align:center;padding:24px 20px 88px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .step.active{display:flex;animation:stepIn 0.55s cubic-bezier(0.34,1.2,0.64,1) forwards;}
 @keyframes stepIn{from{opacity:0;transform:scale(0.94) translateY(18px);}to{opacity:1;transform:scale(1) translateY(0);}}
 
@@ -258,7 +258,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .pay-badge{display:inline-block;background:linear-gradient(135deg,var(--brass),var(--rust));color:var(--walnut);border-radius:100px;padding:2px 9px;font-weight:700;font-size:0.85rem;margin-left:3px;}
 
 /* Success modal */
-#successModal{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(30,24,18,0.6);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity 0.35s;padding:20px;}
+#successModal{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:safe center;background:rgba(30,24,18,0.6);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity 0.35s;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 #successModal.show{opacity:1;pointer-events:all;}
 .success-card{background:#FFFDF9;border:1px solid rgba(201,154,82,0.25);border-radius:24px;padding:40px 30px 32px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(140,106,52,0.22);animation:modalIn 0.5s cubic-bezier(0.34,1.4,0.64,1);position:relative;overflow:hidden;}
 @keyframes modalIn{from{transform:scale(0.8) translateY(24px);opacity:0;}to{transform:scale(1);opacity:1;}}
@@ -311,10 +311,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <span class="success-icon">🎉</span>
     <h3>Link is ready!</h3>
     <p>Your letter to <span id="successName">Papa</span> is wrapped and ready to send 👔</p>
-    <div class="link-box" id="shareLinkBox" onclick="copyLink()">
-      <span class="link-label">🔗 Shareable link</span>
-      <span id="shareLinkText"></span>
-    </div>
+    <span id="shareLinkText" style="display:none;"></span>
     <div class="modal-btns">
       <button class="btn-copy" onclick="copyLink()">📋 Copy link</button>
       <button class="btn-wa" id="waBtn">
@@ -326,26 +323,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   </div>
 </div>
 
-<!-- UPI PAYMENT MODAL -->
 <style>
-#upiModal{position:fixed;inset:0;z-index:9200;display:flex;align-items:center;justify-content:center;background:rgba(30,24,18,0.62);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .35s;padding:20px;}
-#upiModal.show{opacity:1;pointer-events:all;}
-.upi-card{position:relative;width:100%;max-width:344px;background:rgba(255,253,249,0.98);border:1px solid rgba(201,154,82,0.28);border-radius:24px;padding:30px 26px 22px;text-align:center;box-shadow:0 24px 80px rgba(140,106,52,0.22);animation:doneIn .5s cubic-bezier(.34,1.4,.64,1);}
-.upi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,var(--brass),var(--rust),var(--coral),var(--brass));background-size:300%;animation:shimmer 4s linear infinite;}
-.upi-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1rem;color:var(--muted);cursor:pointer;line-height:1;}
-.upi-title{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:600;color:var(--ink);margin-bottom:4px;}
-.upi-sub{font-size:0.76rem;color:var(--ink-soft);margin-bottom:16px;}
-.upi-qr-wrap{display:inline-block;padding:10px;background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(120,80,40,.14);margin-bottom:14px;}
-.upi-qr{display:block;width:200px;height:200px;border-radius:6px;background:#f4ece0;}
-.upi-vpa{display:flex;align-items:center;justify-content:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:0.86rem;color:var(--ink);margin-bottom:16px;}
-.upi-copy{font-family:'IBM Plex Mono',monospace;font-size:0.64rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--paper-line);background:var(--paper);color:var(--ink-soft);border-radius:100px;padding:4px 10px;cursor:pointer;}
-.upi-copy:hover{border-color:var(--brass);}
-.upi-app-btn{display:block;text-decoration:none;background:var(--paper);color:var(--ink);border:1.5px solid var(--paper-line);border-radius:12px;padding:12px;font-size:0.86rem;font-weight:600;margin-bottom:8px;transition:all .18s;}
-.upi-app-btn:hover{border-color:var(--brass);transform:translateY(-1px);}
-.upi-done-btn{width:100%;border:none;border-radius:12px;padding:13px;background:var(--walnut);color:#FBF3E2;font-family:'Work Sans',sans-serif;font-size:0.92rem;font-weight:600;cursor:pointer;transition:all .18s;}
-.upi-done-btn:hover{background:var(--walnut-2);transform:translateY(-1px);}
-.upi-note{font-size:0.66rem;color:var(--muted);margin-top:10px;line-height:1.5;}
-
 /* "dear dad" watermark + signature */
 .dd-wm{position:fixed;inset:-45%;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='124'%3E%3Ctext x='6' y='70' font-family='Georgia,serif' font-style='italic' font-size='27' fill='%23ffffff'%3Edear dad%3C/text%3E%3C/svg%3E");background-repeat:repeat;transform:rotate(-15deg);}
 .dd-credit{position:fixed;left:13px;bottom:11px;z-index:50;pointer-events:none;font-family:'IBM Plex Mono',monospace;font-size:0.57rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;opacity:.72;background:rgba(40,28,18,.30);backdrop-filter:blur(4px);padding:5px 11px;border-radius:100px;border:1px solid rgba(255,255,255,.2);}
@@ -383,24 +361,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .cake-base{width:108%;margin-left:-4%;height:26px;border-radius:0 0 16px 16px;background:linear-gradient(180deg,#D89A4A,#C9882E);}
 .cake-plate{width:132%;margin-left:-16%;height:11px;border-radius:50%;background:rgba(120,80,40,.16);margin-top:3px;filter:blur(1.5px);}
 </style>
-<div id="upiModal">
-  <div class="upi-card">
-    <button class="upi-close" onclick="closeUpiModal()" aria-label="Close">✕</button>
-    <div class="upi-title">Pay <span id="upiAmount">₹20</span> via UPI</div>
-    <p class="upi-sub">Scan with any UPI app — GPay · PhonePe · Paytm</p>
-    <div class="upi-qr-wrap">
-      <img id="upiQr" class="upi-qr" alt="UPI QR code" referrerpolicy="no-referrer">
-    </div>
-    <div class="upi-vpa">
-      <span id="upiVpaText">8271342331@ybl</span>
-      <button class="upi-copy" onclick="copyVpa()">Copy</button>
-    </div>
-    <a id="upiAppLink" class="upi-app-btn" href="#">📲 Open a UPI app to pay</a>
-    <button class="upi-done-btn" onclick="upiPaid()">✓ I've paid — get my link</button>
-    <p class="upi-note">After paying, tap the button above to unlock your shareable link.</p>
-  </div>
-</div>
-
 <div class="toast" id="toast">✓ Copied!</div>
 
 <div id="app">
@@ -497,7 +457,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
           <span>💌</span>
           <span>Pay &amp; get link <span class="pay-badge" id="payBadge">₹20</span></span>
         </button>
-        <div class="pay-note">Pay ₹20 via UPI · Then get your shareable link · No account needed</div>
+        <div class="pay-note">Opens your UPI app · your link is ready right after · no account needed</div>
       </div>
     </div>
   </div>
@@ -1110,31 +1070,14 @@ function upiUri(amount) {
 function pay() {
   if (paying) return;
   const price = activePrice;
-  // Free (e.g. the MYPAPA coupon) → straight to the link, no payment.
-  if (price === 0) { demoSuccess(); return; }
-  openUpiModal(price);
-}
-
-function openUpiModal(price) {
-  const uri = upiUri(price);
-  document.getElementById('upiAmount').textContent  = '₹' + price;
-  document.getElementById('upiVpaText').textContent = UPI_VPA;
-  document.getElementById('upiAppLink').href        = uri;
-  document.getElementById('upiQr').src =
-    'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=' + encodeURIComponent(uri);
-  document.getElementById('upiModal').classList.add('show');
-}
-function closeUpiModal() {
-  document.getElementById('upiModal').classList.remove('show');
-}
-function upiPaid() {
-  closeUpiModal();
+  // Free (QTPAPA coupon) → straight to the link, no payment.
+  if (price === 0) { onSuccess('free'); return; }
+  // On a phone: open the user's UPI app directly (GPay / PhonePe / Paytm).
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    try { window.location.href = upiUri(price); } catch (e) {}
+  }
+  // Hand over the link — ready the moment they come back from the app.
   onSuccess('upi_' + Date.now().toString(36));
-}
-function copyVpa() {
-  navigator.clipboard.writeText(UPI_VPA)
-    .then(() => showToast('✓ UPI ID copied!'))
-    .catch(() => showToast('UPI ID: ' + UPI_VPA, 3000));
 }
 
 function restoreBtn(btn, price) {
