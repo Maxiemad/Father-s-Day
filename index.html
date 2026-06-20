@@ -208,6 +208,10 @@ body::after{
 .chip{ transition:all .18s cubic-bezier(.34,1.4,.64,1); }
 .chip:hover{ transform:translateY(-2px) scale(1.04); border-color:var(--coral); }
 .tie-icon{ filter:drop-shadow(0 8px 24px rgba(240,135,106,.40)); }
+.hero-sticker{ display:block; width:132px; height:132px; margin:0 auto 16px; object-fit:cover;
+  border-radius:28px; border:3px solid #fff; box-shadow:0 16px 34px rgba(120,80,40,.22);
+  animation:tieFloat 4.5s ease-in-out infinite; }
+@media(max-width:500px){ .hero-sticker{ width:112px; height:112px; } }
 
 @media(max-width:720px){
   .stickers{ display:none !important; }
@@ -267,7 +271,7 @@ body::after{
 
 <div class="page">
   <div class="header">
-    <span class="tie-icon">👔</span>
+    <img class="hero-sticker" src="assets/dad-sticker.png" alt="Best Dad sticker" width="132" height="132">
     <div class="header-eyebrow">
       <span class="eyebrow-line"></span>
       Father's Day Special
