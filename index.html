@@ -7,35 +7,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,400;1,500&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --paper:       #EFE6D2;
-  --paper-2:     #E4D8BE;
-  --paper-line:  #D8C9A8;
-  --ink:         #2A2118;
-  --ink-soft:    #564A3A;
-  --muted:       #8A7A63;
+  --paper:       #FBEFE1;
+  --paper-2:     #FFFBF4;
+  --paper-line:  #F1DCC6;
+  --ink:         #4A3829;
+  --ink-soft:    #7C6552;
+  --muted:       #A8917B;
 
-  --walnut:      #1E1812;
-  --walnut-2:    #322619;
-  --walnut-3:    #4A3A28;
+  --walnut:      #3A2C20;
+  --walnut-2:    #4A3829;
+  --walnut-3:    #6B5039;
 
-  --brass:       #C99A52;
-  --brass-light: #E3C285;
-  --brass-dark:  #8C6A34;
-  --rust:        #B5651D;
-  --moss:        #5B6A4D;
-  --coral:       #E2542D;
+  --brass:       #F0B24E;
+  --brass-light: #F9D88E;
+  --brass-dark:  #C9882E;
+  --rust:        #EE8A5E;
+  --moss:        #A6C2A0;
+  --coral:       #F0876A;
 
-  --card-shadow: 0 1px 3px rgba(28,20,10,.06), 0 8px 24px rgba(28,20,10,.08), 0 32px 64px rgba(28,20,10,.06);
+  --sky:         #7FA8C9;
+  --sky-soft:    #BDD6E8;
+  --blush:       #F6CBD3;
+
+  --card-shadow: 0 2px 6px rgba(120,80,40,.06), 0 12px 30px rgba(120,80,40,.10), 0 40px 70px rgba(120,80,40,.07);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body {
   font-family:'Work Sans', sans-serif;
-  background:var(--paper);
+  background:
+    radial-gradient(circle at 16% 12%, rgba(240,135,106,.20), transparent 40%),
+    radial-gradient(circle at 86% 10%, rgba(249,216,158,.32), transparent 38%),
+    radial-gradient(circle at 78% 88%, rgba(189,214,232,.30), transparent 42%),
+    radial-gradient(circle at 10% 86%, rgba(246,203,211,.28), transparent 40%),
+    linear-gradient(160deg, #FFF7EF 0%, #FDEEDF 50%, #FBEFE6 100%);
+  background-attachment:fixed;
   min-height:100vh;
   overflow-x:hidden;
   color:var(--ink);
+}
+body::before{
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:radial-gradient(rgba(201,136,46,.13) 1.1px, transparent 1.2px);
+  background-size:24px 24px;
+  opacity:.5;
 }
 
 body::after{
@@ -48,9 +64,9 @@ body::after{
 }
 
 .orb{ position:fixed; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:0; }
-.orb-1{ width:480px; height:480px; background:rgba(201,154,82,.16); top:-100px; right:-80px; animation:orbDrift 18s ease-in-out infinite; }
-.orb-2{ width:360px; height:360px; background:rgba(181,101,29,.10); bottom:50px; left:-100px; animation:orbDrift 14s ease-in-out infinite reverse; }
-.orb-3{ width:260px; height:260px; background:rgba(91,106,77,.10); top:40%; left:30%; animation:orbDrift 22s ease-in-out infinite 3s; }
+.orb-1{ width:480px; height:480px; background:rgba(240,135,106,.20); top:-100px; right:-80px; animation:orbDrift 18s ease-in-out infinite; }
+.orb-2{ width:360px; height:360px; background:rgba(249,216,158,.32); bottom:50px; left:-100px; animation:orbDrift 14s ease-in-out infinite reverse; }
+.orb-3{ width:300px; height:300px; background:rgba(127,168,201,.18); top:40%; left:28%; animation:orbDrift 22s ease-in-out infinite 3s; }
 @keyframes orbDrift{ 0%,100%{ transform:translate(0,0) scale(1); } 33%{ transform:translate(20px,-30px) scale(1.05); } 66%{ transform:translate(-15px,20px) scale(.97); } }
 
 .page{ position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:64px 20px 120px; }
@@ -158,12 +174,96 @@ body::after{
   .two-col{ grid-template-columns:1fr; }
   .btn-submit{ padding:16px 32px; font-size:.95rem; }
 }
+
+/* ---------- Cute Father's Day sticker layer ---------- */
+.page{ z-index:2; }
+.stickers{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.sticker{ position:absolute; opacity:0; transform-origin:center;
+  animation: stIn .7s cubic-bezier(.34,1.56,.64,1) both var(--delay,0s),
+             stFloat var(--d,7s) ease-in-out infinite calc(var(--delay,0s) + .7s); }
+.sticker.st-emoji{ width:62px; height:62px; display:flex; align-items:center; justify-content:center;
+  font-size:1.95rem; background:var(--paper-2); border:3px solid #fff; border-radius:50%;
+  box-shadow:0 10px 22px rgba(120,80,40,.18); }
+.sticker.st-svg{ filter:drop-shadow(0 9px 16px rgba(120,80,40,.22)); }
+@keyframes stIn{
+  from{ opacity:0; transform:translateY(28px) scale(.45) rotate(var(--rot,0deg)); }
+  to{ opacity:1; transform:translateY(0) scale(1) rotate(var(--rot,0deg)); } }
+@keyframes stFloat{
+  0%,100%{ transform:translateY(0) rotate(var(--rot,0deg)); }
+  50%{ transform:translateY(-15px) rotate(calc(var(--rot,0deg) + 5deg)); } }
+
+/* ---------- Entrance animations ---------- */
+.header{ animation:riseIn .85s cubic-bezier(.2,.75,.25,1) both; }
+.card{ animation:riseIn .85s cubic-bezier(.2,.75,.25,1) .15s both; }
+@keyframes riseIn{ from{ opacity:0; transform:translateY(30px); } to{ opacity:1; transform:translateY(0); } }
+
+/* ---------- Shimmer headline + cuter chips ---------- */
+.header h1 em{
+  background:linear-gradient(90deg, var(--coral), var(--brass-dark), var(--rust), var(--coral));
+  background-size:220% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  animation:emShimmer 5s linear infinite; }
+@keyframes emShimmer{ to{ background-position:220% 0; } }
+.chip{ transition:all .18s cubic-bezier(.34,1.4,.64,1); }
+.chip:hover{ transform:translateY(-2px) scale(1.04); border-color:var(--coral); }
+.tie-icon{ filter:drop-shadow(0 8px 24px rgba(240,135,106,.40)); }
+
+@media(max-width:720px){
+  .stickers{ display:none !important; }
+}
+@media(prefers-reduced-motion:reduce){
+  .sticker, .header, .card, .orb, .tie-icon{ animation:none !important; opacity:1 !important; }
+  .header h1 em{ animation:none !important; }
+}
+
+/* ---------- "dear dad" watermark + signature ---------- */
+.dd-wm{ position:fixed; inset:-45%; z-index:0; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='124'%3E%3Ctext x='6' y='70' font-family='Georgia,serif' font-style='italic' font-size='27' fill='%23C9882E'%3Edear dad%3C/text%3E%3C/svg%3E");
+  background-repeat:repeat; transform:rotate(-15deg); opacity:.07; }
+.dd-credit{ position:fixed; left:13px; bottom:12px; z-index:50; pointer-events:none;
+  font-family:'IBM Plex Mono',monospace; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-soft); opacity:.65; background:rgba(255,251,244,.62); backdrop-filter:blur(4px);
+  padding:5px 11px; border-radius:100px; border:1px solid rgba(120,80,40,.14); box-shadow:0 4px 14px rgba(120,80,40,.08); }
+@media(max-width:500px){ .dd-credit{ font-size:.54rem; padding:4px 9px; } }
 </style>
 </head>
 <body>
+<div class="dd-wm" aria-hidden="true"></div>
+<div class="dd-credit">✦ art by akanksha</div>
+
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
+
+<!-- Cute Father's Day stickers (decorative, larger screens) -->
+<div class="stickers" aria-hidden="true">
+  <!-- #1 DAD medal -->
+  <div class="sticker st-svg" style="top:86px; left:4.5%; --rot:-12deg; --d:7s; --delay:.25s;">
+    <svg width="80" height="98" viewBox="0 0 80 98" xmlns="http://www.w3.org/2000/svg">
+      <path d="M28 58 L19 94 L33 84 L40 94 L40 58Z" fill="#5E89AE" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M52 58 L61 94 L47 84 L40 94 L40 58Z" fill="#7FA8C9" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="40" cy="37" r="33" fill="#F0B24E" stroke="#fff" stroke-width="4"/>
+      <circle cx="40" cy="37" r="25" fill="#F9D88E"/>
+      <text x="40" y="35" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="17" fill="#B9781F">#1</text>
+      <text x="40" y="51" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-weight="700" font-size="10" letter-spacing="1.5" fill="#B9781F">DAD</text>
+    </svg>
+  </div>
+  <!-- Necktie -->
+  <div class="sticker st-svg" style="top:118px; right:5%; --rot:11deg; --d:6.4s; --delay:.45s;">
+    <svg width="48" height="82" viewBox="0 0 48 82" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17 4 L31 4 L35 17 L24 25 L13 17 Z" fill="#5E89AE" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M15 19 L33 19 L40 64 L24 79 L8 64 Z" fill="#7FA8C9" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M19 28 L33 40" stroke="#BDD6E8" stroke-width="3" stroke-linecap="round"/>
+      <path d="M17 42 L31 54" stroke="#BDD6E8" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="sticker st-emoji" style="top:300px; left:7%; --rot:-8deg; --d:7.6s; --delay:.6s;">🥸</div>
+  <div class="sticker st-emoji" style="top:332px; right:7.5%; --rot:9deg; --d:6.8s; --delay:.8s;">🎈</div>
+  <div class="sticker st-emoji" style="top:54%; left:4%; --rot:7deg; --d:8s; --delay:.7s;">☕</div>
+  <div class="sticker st-emoji" style="bottom:96px; right:6%; --rot:-10deg; --d:7.2s; --delay:.9s;">🏆</div>
+  <div class="sticker st-emoji" style="bottom:128px; left:5.5%; --rot:8deg; --d:6.6s; --delay:.55s;">❤️</div>
+</div>
 
 <div class="page">
   <div class="header">
@@ -256,6 +356,16 @@ body::after{
       <div class="photo-skip-hint">No photo? No worries — we'll use a sweet little animation instead.</div>
     </div>
 
+    <!-- Promise -->
+    <div class="section-gap" style="margin-top:28px;">
+      <div class="section-label">A little promise to him (optional)</div>
+      <div class="field">
+        <label>One thing you'll do for him 🤞</label>
+        <input type="text" id="promise" placeholder="e.g. More Sunday calls. Fewer 'I'm fine's.'" maxlength="90">
+      </div>
+      <div class="years-hint">Shows up as a sweet little vow on his surprise page.</div>
+    </div>
+
     <!-- Submit -->
     <div class="submit-wrap">
       <button class="btn-submit" onclick="goPreview()">
@@ -334,10 +444,26 @@ function removePhoto(){
 }
 
 const FALLBACKS = {
-  warm:   `There's a version of "home" that only exists because of you, {R}. The quiet kind — the kind that doesn't need to be loud to be felt. I don't say this enough, but I notice everything you've done, even the parts you thought went unnoticed. Happy Father's Day. I hope this year hands you back even a little of what you've given everyone else. 🌅`,
-  funny:  `Happy Father's Day to the man who still says "I'm not lost, I know exactly where we are" right before asking a stranger for directions. You've perfected the art of pretending the AC is fine, the WiFi is fine, and you definitely don't need help with your phone. We love you anyway, {R}. Mostly anyway. 😂`,
-  hype:   `HAPPY FATHER'S DAY, {R}. The man. The myth. The reason half the neighbourhood thinks parallel parking is easy. You've been running this household on dad jokes and pure willpower for years and somehow it WORKS. Absolute legend behaviour. This is your year. 🔥`,
-  poetic: `Some people carry a room just by walking into it quietly. You're one of them, {R}. There's a steadiness in you that I've leaned on more than I've ever said out loud. Happy Father's Day — may this year give you back some of the stillness you've given everyone else. 🌿`,
+  warm: [
+    `There's a version of "home" that only exists because of you, {R}. The quiet kind — the kind that doesn't need to be loud to be felt. I don't say this enough, but I notice everything you've done, even the parts you thought went unnoticed. Happy Father's Day. I hope this year hands you back even a little of what you've given everyone else. 🌅`,
+    `Some of the safest I've ever felt was just being in the same room as you, {R} — not even talking. You made steadiness look easy, and only now do I get how hard that actually is. Thank you for every quiet thing you did that I never thanked you for. Happy Father's Day. 🤍`,
+    `If I turn out even half as patient, as steady, as kind as you, {R}, I'll have done something right. You've been my example long before I knew I was watching. Happy Father's Day — today I just want you to feel as looked-after as you've always made me feel. 🌿`,
+  ],
+  funny: [
+    `Happy Father's Day to the man who still says "I'm not lost, I know exactly where we are" right before asking a stranger for directions. You've perfected the art of pretending the AC is fine, the WiFi is fine, and you definitely don't need help with your phone. We love you anyway, {R}. Mostly anyway. 😂`,
+    `{R}, you are living proof that one human can own 14 chargers and still never find one. Champion of "who touched the remote", world record holder for falling asleep during the movie YOU picked. Honestly an icon. Happy Father's Day, you beautifully stubborn legend. 😎`,
+    `Happy Father's Day to a man whose hobbies include switching off lights in empty rooms, asking "is that show STILL going on?", and retelling the same story with 3% more drama every year. Wouldn't trade you for anyone, {R}. Okay, maybe for someone who lets the AC run. 🤣`,
+  ],
+  hype: [
+    `HAPPY FATHER'S DAY, {R}. The man. The myth. The reason half the neighbourhood thinks parallel parking is easy. You've been running this household on dad jokes and pure willpower for years and somehow it WORKS. Absolute legend behaviour. This is your year. 🔥`,
+    `Big shoutout to the GOAT, {R} himself. Fixer of unfixable things, giver of unsolicited but weirdly always-correct advice, undefeated champion of "I told you so". The blueprint. The legend. Happy Father's Day to the realest one in the game. 🏆`,
+    `{R} — captain, coach, ATM, tech support and emotional support human, all in one. Years of carrying everyone and still standing tall. Today we celebrate YOU, loudly, because you earned every bit of it. Happy Father's Day, legend. 🙌`,
+  ],
+  poetic: [
+    `Some people carry a room just by walking into it quietly. You're one of them, {R}. There's a steadiness in you that I've leaned on more than I've ever said out loud. Happy Father's Day — may this year give you back some of the stillness you've given everyone else. 🌿`,
+    `You taught me things without ever sitting me down to teach them, {R} — in the way you stayed calm, showed up, kept your word. Quiet lessons that became the spine of who I am. Happy Father's Day to the gentlest kind of strong. 🕊️`,
+    `If love had a sound in our house, it was your footsteps coming home, {R}. Familiar, certain, safe. I'm only now learning how much you carried, and how lightly you carried it. Happy Father's Day — today, let us hold a little of it for you. 🌙`,
+  ],
 };
 
 async function generateMsg() {
@@ -350,7 +476,8 @@ async function generateMsg() {
 
   await new Promise(r => setTimeout(r, 900));
 
-  const msg = (FALLBACKS[tone] || FALLBACKS.warm).replace(/\{R\}/g, relation);
+  const bank = FALLBACKS[tone] || FALLBACKS.warm;
+  const msg  = bank[Math.floor(Math.random() * bank.length)].replace(/\{R\}/g, relation);
   const ta = document.getElementById('mainMessage');
   ta.value = msg;
   countChars(ta);
@@ -379,6 +506,7 @@ function goPreview() {
   const mainMessage = document.getElementById('mainMessage').value.trim()
     || `You deserve every good thing today, ${relation}. Happy Father's Day. 👔`;
   const papaYears = parseInt(document.getElementById('papaYears').value, 10) || 0;
+  const promise   = document.getElementById('promise').value.trim();
 
   const msgs = getBalloons(relation);
 
@@ -388,6 +516,7 @@ function goPreview() {
     mainMessage,
     msgs,
     papaYears,
+    promise,
     photo: photoDataUrl,
   }));
   window.location.href = 'view.html';

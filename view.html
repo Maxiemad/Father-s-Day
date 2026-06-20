@@ -7,23 +7,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,400;1,500&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --paper:       #EFE6D2;
-  --paper-2:     #E4D8BE;
-  --paper-line:  #D8C9A8;
-  --ink:         #2A2118;
-  --ink-soft:    #564A3A;
-  --muted:       #8A7A63;
+  --paper:       #FBEFE1;
+  --paper-2:     #FFFBF4;
+  --paper-line:  #F1DCC6;
+  --ink:         #4A3829;
+  --ink-soft:    #7C6552;
+  --muted:       #A8917B;
 
-  --walnut:      #1E1812;
-  --walnut-2:    #322619;
-  --walnut-3:    #4A3A28;
+  --walnut:      #3A2C20;
+  --walnut-2:    #4A3829;
+  --walnut-3:    #6B5039;
 
-  --brass:       #C99A52;
-  --brass-light: #E3C285;
-  --brass-dark:  #8C6A34;
-  --rust:        #B5651D;
-  --moss:        #5B6A4D;
-  --coral:       #E2542D;
+  --brass:       #F0B24E;
+  --brass-light: #F9D88E;
+  --brass-dark:  #C9882E;
+  --rust:        #EE8A5E;
+  --moss:        #A6C2A0;
+  --coral:       #F0876A;
+
+  --sky:         #7FA8C9;
+  --sky-soft:    #BDD6E8;
+  --blush:       #F6CBD3;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;background:var(--paper);}
@@ -292,6 +296,8 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
 </div>
 
 <div id="watermark"></div>
+<div class="dd-wm" aria-hidden="true"></div>
+<div class="dd-credit">✦ art by akanksha</div>
 
 <div id="successModal">
   <div class="success-card">
@@ -310,6 +316,55 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
       </button>
     </div>
     <div class="modal-pid" id="modalPid"></div>
+  </div>
+</div>
+
+<!-- UPI PAYMENT MODAL -->
+<style>
+#upiModal{position:fixed;inset:0;z-index:9200;display:flex;align-items:center;justify-content:center;background:rgba(30,24,18,0.62);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .35s;padding:20px;}
+#upiModal.show{opacity:1;pointer-events:all;}
+.upi-card{position:relative;width:100%;max-width:344px;background:rgba(255,253,249,0.98);border:1px solid rgba(201,154,82,0.28);border-radius:24px;padding:30px 26px 22px;text-align:center;box-shadow:0 24px 80px rgba(140,106,52,0.22);animation:doneIn .5s cubic-bezier(.34,1.4,.64,1);}
+.upi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,var(--brass),var(--rust),var(--coral),var(--brass));background-size:300%;animation:shimmer 4s linear infinite;}
+.upi-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1rem;color:var(--muted);cursor:pointer;line-height:1;}
+.upi-title{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.upi-sub{font-size:0.76rem;color:var(--ink-soft);margin-bottom:16px;}
+.upi-qr-wrap{display:inline-block;padding:10px;background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(120,80,40,.14);margin-bottom:14px;}
+.upi-qr{display:block;width:200px;height:200px;border-radius:6px;background:#f4ece0;}
+.upi-vpa{display:flex;align-items:center;justify-content:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:0.86rem;color:var(--ink);margin-bottom:16px;}
+.upi-copy{font-family:'IBM Plex Mono',monospace;font-size:0.64rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--paper-line);background:var(--paper);color:var(--ink-soft);border-radius:100px;padding:4px 10px;cursor:pointer;}
+.upi-copy:hover{border-color:var(--brass);}
+.upi-app-btn{display:block;text-decoration:none;background:var(--paper);color:var(--ink);border:1.5px solid var(--paper-line);border-radius:12px;padding:12px;font-size:0.86rem;font-weight:600;margin-bottom:8px;transition:all .18s;}
+.upi-app-btn:hover{border-color:var(--brass);transform:translateY(-1px);}
+.upi-done-btn{width:100%;border:none;border-radius:12px;padding:13px;background:var(--walnut);color:#FBF3E2;font-family:'Work Sans',sans-serif;font-size:0.92rem;font-weight:600;cursor:pointer;transition:all .18s;}
+.upi-done-btn:hover{background:var(--walnut-2);transform:translateY(-1px);}
+.upi-note{font-size:0.66rem;color:var(--muted);margin-top:10px;line-height:1.5;}
+
+/* "dear dad" watermark + signature */
+.dd-wm{position:fixed;inset:-45%;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='124'%3E%3Ctext x='6' y='70' font-family='Georgia,serif' font-style='italic' font-size='27' fill='%23ffffff'%3Edear dad%3C/text%3E%3C/svg%3E");background-repeat:repeat;transform:rotate(-15deg);}
+.dd-credit{position:fixed;left:13px;bottom:11px;z-index:50;pointer-events:none;font-family:'IBM Plex Mono',monospace;font-size:0.57rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;opacity:.72;background:rgba(40,28,18,.30);backdrop-filter:blur(4px);padding:5px 11px;border-radius:100px;border:1px solid rgba(255,255,255,.2);}
+/* finale promise card */
+.finale-promise{flex-direction:column;align-items:center;gap:4px;margin-top:16px;padding:13px 20px;background:rgba(255,251,244,.72);border:1.5px dashed var(--brass);border-radius:16px;max-width:300px;box-shadow:0 8px 22px rgba(120,80,40,.12);animation:doneIn .6s cubic-bezier(.34,1.4,.64,1);}
+.fp-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-dark);}
+.fp-text{font-family:'Fraunces',serif;font-style:italic;font-size:1.02rem;color:var(--ink);line-height:1.5;text-align:center;}
+/* tap-to-spread-love hearts */
+.tap-heart{position:fixed;z-index:8000;pointer-events:none;font-size:1.4rem;will-change:transform,opacity;animation:tapHeart 1s ease-out forwards;}
+@keyframes tapHeart{0%{opacity:.95;transform:translate(-50%,-50%) scale(.5) rotate(0deg);}100%{opacity:0;transform:translate(-50%,-150px) scale(1.35) rotate(18deg);}}
+</style>
+<div id="upiModal">
+  <div class="upi-card">
+    <button class="upi-close" onclick="closeUpiModal()" aria-label="Close">✕</button>
+    <div class="upi-title">Pay <span id="upiAmount">₹20</span> via UPI</div>
+    <p class="upi-sub">Scan with any UPI app — GPay · PhonePe · Paytm</p>
+    <div class="upi-qr-wrap">
+      <img id="upiQr" class="upi-qr" alt="UPI QR code" referrerpolicy="no-referrer">
+    </div>
+    <div class="upi-vpa">
+      <span id="upiVpaText">8271342331@ybl</span>
+      <button class="upi-copy" onclick="copyVpa()">Copy</button>
+    </div>
+    <a id="upiAppLink" class="upi-app-btn" href="#">📲 Open a UPI app to pay</a>
+    <button class="upi-done-btn" onclick="upiPaid()">✓ I've paid — get my link</button>
+    <p class="upi-note">After paying, tap the button above to unlock your shareable link.</p>
   </div>
 </div>
 
@@ -376,11 +431,12 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
       <div class="finale-tag" id="finaleTag">✦ MY HERO</div>
       <div class="finale-quote" id="finaleQuote"></div>
       <div class="finale-from" id="finaleFrom"></div>
+      <div class="finale-promise" id="finalePromise" style="display:none;"></div>
       <div class="pay-wrap" id="payWrap">
         <div class="pay-head">Send this for real ✦</div>
         <div class="price-row">
-          <span class="price-now" id="priceNow">₹79</span>
-          <span class="price-was" id="priceWas">₹79</span>
+          <span class="price-now" id="priceNow">₹20</span>
+          <span class="price-was" id="priceWas">₹20</span>
           <span class="price-saved" id="priceSaved"></span>
         </div>
         <div class="coupon-row">
@@ -390,9 +446,9 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
         <div class="coupon-msg" id="couponMsg"></div>
         <button class="pay-btn" id="payBtn" onclick="pay()">
           <span>💌</span>
-          <span>Get shareable link <span class="pay-badge" id="payBadge">₹79</span></span>
+          <span>Pay &amp; get link <span class="pay-badge" id="payBadge">₹20</span></span>
         </button>
-        <div class="pay-note">One-time · Instant link · No account needed</div>
+        <div class="pay-note">Pay ₹20 via UPI · Then get your shareable link · No account needed</div>
       </div>
     </div>
   </div>
@@ -425,65 +481,26 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
 
 <script>
 /* ══════════════════════════════
-   SUPABASE  (same project as the rest of Dear Papa)
+   SHARE LINK — fully self-contained, no server.
+   The whole letter is packed into the link itself, so it works
+   anywhere and nothing is ever stored on anyone's database.
 ══════════════════════════════ */
-const SUPA_URL = 'https://iliakhaufgpjjtwamisn.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsaWFraGF1Zmdwamp0d2FtaXNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTU0NTMsImV4cCI6MjA5NjQzMTQ1M30.nim8jt-cUhb3IIWjnd0FC3NF6xS_gg8RelBBJG1bIno';
-
-async function supa(path, opts = {}) {
-  const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
-    ...opts,
-    headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, ...(opts.headers || {}) }
-  });
-  if (!r.ok) throw new Error(r.status);
-  return r.json();
+function encodeShare(obj) {
+  const json = JSON.stringify(obj);
+  return encodeURIComponent(btoa(String.fromCharCode(...new TextEncoder().encode(json))));
 }
-
-// NOTE: table "wishes" already exists from the old flow (relation, from_name,
-// message, paid, payment_id). This flow needs three more columns — run once
-// in the Supabase SQL editor:
-//   alter table wishes add column papa_years int4;
-//   alter table wishes add column msgs jsonb;
-//   alter table wishes add column photo text;   -- stores the base64 photo (small, resized client-side)
-
-async function saveRow(payId) {
-  const d = await supa('wishes', {
-    method: 'POST',
-    headers: { Prefer: 'return=representation' },
-    body: JSON.stringify({
-      relation:    D.relation,
-      from_name:   D.senderName,
-      message:     D.mainMessage,
-      papa_years:  D.papaYears,
-      msgs:        D.msgs,
-      photo:       D.photo || null,
-      paid:        true,
-      payment_id:  payId
-    })
-  });
-  return d[0].id;
-}
-
-async function loadRow(id) {
-  const d = await supa(`wishes?id=eq.${id}&select=*`);
-  if (!d || !d.length || !d[0].paid) throw new Error('not found');
-  const r = d[0];
-  return {
-    relation:    r.relation,
-    senderName:  r.from_name,
-    mainMessage: r.message,
-    papaYears:   r.papa_years || 0,
-    msgs:        r.msgs && r.msgs.length ? r.msgs : DEFAULT_MSGS,
-    photo:       r.photo || null
-  };
+function decodeShare(str) {
+  const bin   = atob(decodeURIComponent(str));
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return JSON.parse(new TextDecoder().decode(bytes));
 }
 
 /* ══════════════════════════════
    DATA & MODE
 ══════════════════════════════ */
-const params   = new URLSearchParams(location.search);
-const shareId  = params.get('id');
-const isShared = !!shareId;
+const params     = new URLSearchParams(location.search);
+const sharedData = params.get('d');
+const isShared   = !!sharedData;
 
 const DEFAULT_MSGS = [
   'He\'s home before you even text "where are you" 📍',
@@ -499,6 +516,7 @@ let D = {
   mainMessage: 'You deserve every good thing today. Happy Father\'s Day. 👔',
   papaYears:   0,
   msgs:        DEFAULT_MSGS,
+  promise:     '',
   photo:       null
 };
 
@@ -550,7 +568,7 @@ function preloadGifs() {
 async function init() {
   if (isShared) {
     try {
-      const fetched = await loadRow(shareId);
+      const fetched = decodeShare(sharedData);
       D = { ...D, ...fetched };
       hideLoad(); startApp(true);
     } catch(e) {
@@ -590,7 +608,7 @@ function startApp(shared) {
 
 function buildWatermark() {
   const wm   = document.getElementById('watermark');
-  const text = 'Preview Only · Dear Papa · ';
+  const text = "dear dad · preview · ";
   const rows = Math.ceil(window.innerHeight / 78) + 6;
   for (let r = 0; r < rows; r++) {
     const div = document.createElement('div');
@@ -952,6 +970,15 @@ function startFinale() {
   document.getElementById('finaleQuote').textContent = '"' + line + '"';
   document.getElementById('finaleFrom').textContent  = '— ' + D.senderName;
 
+  const promiseEl = document.getElementById('finalePromise');
+  if (D.promise && D.promise.trim()) {
+    promiseEl.innerHTML = '<span class="fp-label">🤞 my promise to you</span><span class="fp-text">' +
+      D.promise.replace(/</g, '&lt;') + '</span>';
+    promiseEl.style.display = 'flex';
+  } else {
+    promiseEl.style.display = 'none';
+  }
+
   const wrap   = document.getElementById('s5Floats');
   wrap.innerHTML = '';
   const things = ['✦', '✧', '◈', '✿', '❀', '👔', '🎈', '🎉'];
@@ -976,15 +1003,16 @@ function startFinale() {
 /* ══════════════════════════════
    COUPON  — customize these for your own promos / influencer codes
 ══════════════════════════════ */
-const BASE = 79;
+const BASE = 20;
 let activePrice = BASE;
 document.getElementById('payBadge').textContent = '₹' + BASE;
 document.getElementById('priceNow').textContent = '₹' + BASE;
 
 const COUPONS = {
-  'PAPA20':   { price: 59, label: '₹20 off!' },
-  'FEIN': { price: 0,  label: 'Free! 🎉' },
-  'FEIN1': { price: 1,  label: 'Test mode' },
+  // Use MYPAPA yourself to make your own link for free (you can't pay your own UPI).
+  'MYPAPA': { price: 0,  label: 'Free for you 💛' },
+  'PAPA10': { price: 10, label: '₹10 off!' },
+  'FREE':   { price: 0,  label: 'Free! 🎉' },
 };
 
 function applyCoupon() {
@@ -1020,96 +1048,79 @@ function applyCoupon() {
 /* ══════════════════════════════
    PAYMENT
 ══════════════════════════════ */
-const RZP_KEY = 'rzp_live_SmizRaPApu81ZS';
-let paying    = false;
+/* ── UPI payment — pays straight to the host's UPI ID ── */
+const UPI_VPA  = '8271342331@ybl';
+const UPI_NAME = "Father's Day Special";
+let paying     = false;
 
-(function(){
-  const s = document.createElement('script');
-  s.src   = 'https://checkout.razorpay.com/v1/checkout.js';
-  s.async = true;
-  document.head.appendChild(s);
-})();
+function upiUri(amount) {
+  return 'upi://pay?pa=' + encodeURIComponent(UPI_VPA) +
+         '&pn=' + encodeURIComponent(UPI_NAME) +
+         '&am=' + encodeURIComponent(amount) +
+         '&cu=INR&tn=' + encodeURIComponent("Father's Day letter");
+}
 
 function pay() {
   if (paying) return;
-  paying = true;
   const price = activePrice;
-  const btn   = document.getElementById('payBtn');
+  // Free (e.g. the MYPAPA coupon) → straight to the link, no payment.
+  if (price === 0) { demoSuccess(); return; }
+  openUpiModal(price);
+}
 
-  if (price === 0) {
-    paying = false;
-    restoreBtn(btn, 0);
-    demoSuccess();
-    return;
-  }
-
-  const paise = price * 100;
-  if (!window.Razorpay) { paying = false; demoSuccess(); return; }
-  if (btn) btn.disabled = true;
-
-  const couponCode = (document.getElementById('couponIn').value || '').trim().toUpperCase() || 'none';
-
-  const opts = {
-    key:         RZP_KEY,
-    amount:      paise,
-    currency:    'INR',
-    name:        'Dear Papa',
-    description: 'Father\'s Day letter — shareable link',
-    prefill:     { name: D.senderName },
-    theme:       { color: '#C99A52' },
-    notes: {
-      coupon:      couponCode,
-      referred_by: couponCode,
-    },
-    modal:       { ondismiss: () => { paying = false; restoreBtn(btn, price); } },
-    handler:     resp => { restoreBtn(btn, price); setTimeout(() => onSuccess(resp.razorpay_payment_id), 300); }
-  };
-  const rzp = new Razorpay(opts);
-  rzp.on('payment.failed', resp => {
-    paying = false;
-    restoreBtn(btn, price);
-    showToast('Payment failed: ' + resp.error.description, 4000);
-  });
-  rzp.open();
+function openUpiModal(price) {
+  const uri = upiUri(price);
+  document.getElementById('upiAmount').textContent  = '₹' + price;
+  document.getElementById('upiVpaText').textContent = UPI_VPA;
+  document.getElementById('upiAppLink').href        = uri;
+  document.getElementById('upiQr').src =
+    'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=' + encodeURIComponent(uri);
+  document.getElementById('upiModal').classList.add('show');
+}
+function closeUpiModal() {
+  document.getElementById('upiModal').classList.remove('show');
+}
+function upiPaid() {
+  closeUpiModal();
+  onSuccess('upi_' + Date.now().toString(36));
+}
+function copyVpa() {
+  navigator.clipboard.writeText(UPI_VPA)
+    .then(() => showToast('✓ UPI ID copied!'))
+    .catch(() => showToast('UPI ID: ' + UPI_VPA, 3000));
 }
 
 function restoreBtn(btn, price) {
   if (!btn) return;
   btn.disabled = false;
   const label = (!price || price === 0) ? 'Free' : '₹' + price;
-  btn.innerHTML = `<span>💌</span><span>Get shareable link <span class="pay-badge">${label}</span></span>`;
+  const verb  = (!price || price === 0) ? 'Get link' : 'Pay &amp; get link';
+  btn.innerHTML = `<span>💌</span><span>${verb} <span class="pay-badge">${label}</span></span>`;
 }
 
 function demoSuccess() {
   onSuccess('demo_' + Math.random().toString(36).substr(2, 9));
 }
 
-async function onSuccess(payId) {
+function onSuccess(payId) {
   paying = false;
   const btn = document.getElementById('payBtn');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳</span><span>Saving...</span>'; }
 
-  let shareLink;
-  try {
-    const id  = await saveRow(payId);
-    shareLink = location.origin + location.pathname + '?id=' + id;
-  } catch(e) {
-    // Local fallback (skips photo to keep the URL a sane length)
-    const enc = btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify({
-      relation:    D.relation,
-      senderName:  D.senderName,
-      mainMessage: D.mainMessage,
-      msgs:        D.msgs,
-      papaYears:   D.papaYears
-    }))));
-    shareLink = location.origin + location.pathname + '?shared=1&data=' + encodeURIComponent(enc);
-    showToast('Saved locally — link may be long', 3000);
-  }
+  // Pack the whole letter into the link — no server, nothing stored anywhere.
+  const payload = {
+    relation:    D.relation,
+    senderName:  D.senderName,
+    mainMessage: D.mainMessage,
+    msgs:        D.msgs,
+    papaYears:   D.papaYears,
+    promise:     D.promise || ''
+  };
+  const shareLink = location.origin + location.pathname + '?d=' + encodeShare(payload);
 
   if (btn) restoreBtn(btn, activePrice);
   document.getElementById('shareLinkText').textContent = shareLink;
   document.getElementById('successName').textContent   = D.relation;
-  document.getElementById('modalPid').textContent      = 'Payment: ' + payId;
+  document.getElementById('modalPid').textContent      = '✦ made with love';
   const wa = encodeURIComponent('🎉 Wrote you something for Father\'s Day, ' + D.relation + '! Open this: ' + shareLink);
   document.getElementById('waBtn').onclick = () => window.open('https://wa.me/?text=' + wa, '_blank');
   document.getElementById('successModal').classList.add('show');
@@ -1141,6 +1152,23 @@ function showToast(msg, d = 2400) {
 }
 
 init();
+
+/* tap anywhere on the finale to spread a little love 💛 */
+(function(){
+  const HEARTS = ['❤️','🧡','💛','🤍','💝'];
+  document.addEventListener('click', e => {
+    const s5 = document.getElementById('step5');
+    if (!s5 || !s5.classList.contains('active')) return;
+    if (e.target.closest('button, a, input, textarea, .pay-wrap, .upi-card, #successModal')) return;
+    const h = document.createElement('div');
+    h.className   = 'tap-heart';
+    h.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+    h.style.left  = e.clientX + 'px';
+    h.style.top   = e.clientY + 'px';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1000);
+  });
+})();
 </script>
 </body>
 </html>
