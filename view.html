@@ -66,8 +66,8 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
 /* STEP 1 */
 #step1{background:linear-gradient(160deg, var(--paper), var(--paper-2), #F0E2D4);}
 .s1-orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;}
-.s1-orb-1{width:400px;height:400px;background:rgba(201,154,82,0.20);top:-80px;right:-60px;}
-.s1-orb-2{width:300px;height:300px;background:rgba(181,101,29,0.12);bottom:-40px;left:-60px;}
+.s1-orb-1{width:400px;height:400px;background:rgba(240,135,106,0.20);top:-80px;right:-60px;}
+.s1-orb-2{width:300px;height:300px;background:rgba(127,168,201,0.16);bottom:-40px;left:-60px;}
 .s1-icon{font-size:4.2rem;margin-bottom:14px;animation:s1float 3.5s ease-in-out infinite;filter:drop-shadow(0 8px 20px rgba(201,154,82,0.4));}
 @keyframes s1float{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-14px) rotate(3deg);}}
 .s1-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--brass-dark);margin-bottom:10px;}
@@ -296,7 +296,6 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
 </div>
 
 <div id="watermark"></div>
-<div class="dd-wm" aria-hidden="true"></div>
 <div class="dd-credit">✦ art by akanksha</div>
 
 <div id="successModal">
@@ -349,6 +348,32 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
 /* tap-to-spread-love hearts */
 .tap-heart{position:fixed;z-index:8000;pointer-events:none;font-size:1.4rem;will-change:transform,opacity;animation:tapHeart 1s ease-out forwards;}
 @keyframes tapHeart{0%{opacity:.95;transform:translate(-50%,-50%) scale(.5) rotate(0deg);}100%{opacity:0;transform:translate(-50%,-150px) scale(1.35) rotate(18deg);}}
+
+/* ---- consistency: same hero sticker + floating stickers on the intro ---- */
+.s1-icon-img{display:block;width:120px;height:120px;object-fit:cover;border-radius:28px;border:3px solid #fff;box-shadow:0 16px 34px rgba(120,80,40,.22);margin:0 auto 16px;animation:s1float 3.6s ease-in-out infinite;}
+.s1-stick{position:absolute;z-index:1;pointer-events:none;width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;background:var(--paper-2);border:3px solid #fff;border-radius:50%;box-shadow:0 10px 22px rgba(120,80,40,.18);animation:s1float 4.6s ease-in-out infinite;}
+.s1-stick.a{top:15%;left:10%;animation-delay:.2s;}
+.s1-stick.b{top:22%;right:11%;animation-delay:.6s;}
+.s1-stick.c{bottom:17%;left:14%;animation-delay:.4s;}
+@media(max-width:520px){ .s1-stick{display:none;} }
+
+/* ---- "Happy Father's Day" cake with flickering candle flames (balloon screen) ---- */
+.bfield{flex:0 0 auto;}
+.cake-wrap{margin:14px auto 12px;display:flex;justify-content:center;animation:cakeRise .8s cubic-bezier(.34,1.4,.64,1) both;}
+@keyframes cakeRise{from{opacity:0;transform:translateY(22px) scale(.9);}to{opacity:1;transform:none;}}
+.cake{position:relative;width:212px;}
+.candles{display:flex;justify-content:center;gap:32px;margin-bottom:-2px;position:relative;z-index:3;}
+.candle{position:relative;width:9px;height:30px;border-radius:3px;background:repeating-linear-gradient(45deg,#E2542D 0 6px,#fff 6px 12px);box-shadow:0 2px 4px rgba(0,0,0,.18);}
+.flame{position:absolute;left:50%;top:-17px;width:13px;height:19px;transform:translateX(-50%);background:radial-gradient(circle at 50% 72%,#fff 0%,#FFE27A 32%,#FF9D2E 68%,#F0522D 100%);border-radius:50% 50% 50% 50% / 62% 62% 40% 40%;box-shadow:0 0 12px 4px rgba(255,170,40,.6),0 0 26px 9px rgba(255,120,30,.32);transform-origin:50% 92%;animation:flicker .14s ease-in-out infinite alternate;}
+.candle:nth-child(2) .flame{animation-delay:.05s;}
+.candle:nth-child(3) .flame{animation-delay:.09s;}
+@keyframes flicker{0%{transform:translateX(-50%) scaleY(1) scaleX(1) rotate(-3deg);opacity:.9;}100%{transform:translateX(-50%) scaleY(1.14) scaleX(.9) rotate(3deg);opacity:1;}}
+.cake-top{position:relative;z-index:2;height:52px;border-radius:14px 14px 5px 5px;background:linear-gradient(180deg,#FBEBD2,#F2CFA2);border:2px solid #fff;box-shadow:0 7px 18px rgba(120,80,40,.18);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.cake-top::before{content:'';position:absolute;top:-7px;left:0;right:0;height:14px;background:radial-gradient(circle at 11px 7px,#fff 9px,transparent 10px) repeat-x;background-size:22px 14px;}
+.cake-text{font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:.78rem;color:#9A3D1C;text-align:center;line-height:1.05;padding:0 10px;position:relative;z-index:1;}
+.cake-mid{height:34px;background:linear-gradient(180deg,#F0876A,#E2542D);box-shadow:inset 0 3px 6px rgba(255,255,255,.2);}
+.cake-base{width:108%;margin-left:-4%;height:18px;border-radius:0 0 12px 12px;background:linear-gradient(180deg,#D89A4A,#C9882E);}
+.cake-plate{width:132%;margin-left:-16%;height:11px;border-radius:50%;background:rgba(120,80,40,.16);margin-top:3px;filter:blur(1.5px);}
 </style>
 <div id="upiModal">
   <div class="upi-card">
@@ -377,7 +402,10 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
   <div class="step" id="step1">
     <div class="s1-orb s1-orb-1"></div>
     <div class="s1-orb s1-orb-2"></div>
-    <div class="s1-icon">👔</div>
+    <div class="s1-stick a">🎈</div>
+    <div class="s1-stick b">🏆</div>
+    <div class="s1-stick c">❤️</div>
+    <img class="s1-icon-img" src="assets/dad-sticker.png" alt="Best Dad sticker" width="120" height="120">
     <div class="s1-eyebrow">A Father's Day surprise</div>
     <h2 class="s1-title">Someone wrote<br><em>this just for you</em></h2>
     <p class="s1-sub" id="s1Sub">A little something wrapped with care</p>
@@ -405,6 +433,19 @@ html,body{height:100%;overflow:hidden;font-family:'Work Sans',sans-serif;backgro
       <div class="s3-title">Pop every balloon 🎈</div>
       <div class="s3-sub" id="s3Counter">Each one holds something true</div>
       <div class="bfield" id="bfield"></div>
+      <div class="cake-wrap" aria-hidden="true">
+        <div class="cake">
+          <div class="candles">
+            <div class="candle"><span class="flame"></span></div>
+            <div class="candle"><span class="flame"></span></div>
+            <div class="candle"><span class="flame"></span></div>
+          </div>
+          <div class="cake-top"><span class="cake-text">Happy Father's Day</span></div>
+          <div class="cake-mid"></div>
+          <div class="cake-base"></div>
+          <div class="cake-plate"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -824,7 +865,7 @@ function buildBalloons() {
     field.appendChild(el);
   });
 
-  field.style.minHeight = (Math.ceil(D.balloons.length / 2) * 240 + 100) + 'px';
+  field.style.minHeight = (Math.ceil(D.balloons.length / 2) * 120 + 70) + 'px';
 
   document.getElementById('letterSal').textContent   = 'Dear ' + D.relation + ',';
   document.getElementById('letterSign').textContent  = 'With love, ' + D.senderName + ' ✦';
@@ -1009,10 +1050,8 @@ document.getElementById('payBadge').textContent = '₹' + BASE;
 document.getElementById('priceNow').textContent = '₹' + BASE;
 
 const COUPONS = {
-  // Use MYPAPA yourself to make your own link for free (you can't pay your own UPI).
-  'MYPAPA': { price: 0,  label: 'Free for you 💛' },
-  'PAPA10': { price: 10, label: '₹10 off!' },
-  'FREE':   { price: 0,  label: 'Free! 🎉' },
+  // QTPAPA → free shareable link. Without it, the user has to pay.
+  'QTPAPA': { price: 0, label: 'Free link 💛' },
 };
 
 function applyCoupon() {
