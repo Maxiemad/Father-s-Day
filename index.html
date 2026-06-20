@@ -478,10 +478,28 @@ async function generateMsg() {
   normal.style.display = 'none';
   loader.style.display = 'flex';
 
-  await new Promise(r => setTimeout(r, 900));
+  // Try real AI first (/api/write — active once an ANTHROPIC_API_KEY is set on
+  // the server). Falls back to the built-in templates if it isn't available.
+  let msg = null;
+  try {
+    const senderName = document.getElementById('senderName').value.trim();
+    const papaYears  = parseInt(document.getElementById('papaYears').value, 10) || 0;
+    const resp = await fetch('/api/write', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ relation, tone, senderName, papaYears })
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data && data.ok && data.message) msg = data.message.trim();
+    }
+  } catch (e) {}
 
-  const bank = FALLBACKS[tone] || FALLBACKS.warm;
-  const msg  = bank[Math.floor(Math.random() * bank.length)].replace(/\{R\}/g, relation);
+  if (!msg) {
+    await new Promise(r => setTimeout(r, 700));
+    const bank = FALLBACKS[tone] || FALLBACKS.warm;
+    msg = bank[Math.floor(Math.random() * bank.length)].replace(/\{R\}/g, relation);
+  }
   const ta = document.getElementById('mainMessage');
   ta.value = msg;
   countChars(ta);

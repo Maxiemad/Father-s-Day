@@ -44,6 +44,13 @@ Every completed link creates one document in the **`orders`** collection:
 
 View them in Atlas → **Browse Collections → fathersday → orders**.
 
+## Optional: real AI for "Write it for me"
+The message writer uses built-in templates by default. To make it **real AI**
+(writes a fresh message every time): add an `ANTHROPIC_API_KEY` env var in Vercel
+(get one at console.anthropic.com). The `/api/write` function then calls Claude;
+if the key is missing or the call fails, the site automatically falls back to the
+templates, so the button always works.
+
 ## ⚠️ Important: `paid` is trust-based
 UPI on a plain website can't be auto-verified, so `paid:true` only means the
 person reached the success step — **not** that money actually arrived. To
