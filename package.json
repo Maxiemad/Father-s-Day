@@ -1,0 +1,9 @@
+{
+  "name": "fathers-day-special",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Father's Day Special — a letter + surprise builder. Static site with a serverless /api/collect endpoint that logs orders to MongoDB.",
+  "dependencies": {
+    "mongodb": "^6.12.0"
+  }
+}

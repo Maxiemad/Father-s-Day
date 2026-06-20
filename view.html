@@ -1117,6 +1117,26 @@ function onSuccess(payId) {
   };
   const shareLink = location.origin + location.pathname + '?d=' + encodeShare(payload);
 
+  // Log this order to MongoDB via /api/collect (active once deployed — see SETUP.md).
+  // Fire-and-forget: if the endpoint isn't there (e.g. local/static), it's a silent no-op.
+  try {
+    fetch('/api/collect', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        relation:    D.relation,
+        senderName:  D.senderName,
+        mainMessage: D.mainMessage,
+        promise:     D.promise || '',
+        papaYears:   D.papaYears,
+        amount:      activePrice,
+        coupon:      (document.getElementById('couponIn').value || '').trim().toUpperCase(),
+        paid:        typeof payId === 'string' && payId.indexOf('upi_') === 0,
+        paymentRef:  payId
+      })
+    }).catch(() => {});
+  } catch (e) {}
+
   if (btn) restoreBtn(btn, activePrice);
   document.getElementById('shareLinkText').textContent = shareLink;
   document.getElementById('successName').textContent   = D.relation;
