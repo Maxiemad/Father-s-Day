@@ -488,6 +488,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   </div>
 </div>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 /* ══════════════════════════════
    SHARE LINK — fully self-contained, no server.
@@ -1067,17 +1068,65 @@ function upiUri(amount) {
          '&cu=INR&tn=' + encodeURIComponent("Father's Day letter");
 }
 
-function pay() {
+async function pay() {
   if (paying) return;
   const price = activePrice;
   // Free (QTPAPA coupon) → straight to the link, no payment.
   if (price === 0) { onSuccess('free'); return; }
-  // On a phone: open the user's UPI app directly (GPay / PhonePe / Paytm).
+  paying = true;
+
+  // Try the real gateway first — the link unlocks ONLY after a verified payment.
+  try {
+    const r = await fetch('/api/create-order', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: price })
+    });
+    if (r.ok) {
+      const o = await r.json();
+      if (o.ok && o.orderId && o.keyId && window.Razorpay) {
+        paying = false;
+        openRazorpay(o);
+        return;
+      }
+    }
+  } catch (e) {}
+
+  // Gateway not set up yet → fall back to direct UPI (trust-based).
+  paying = false;
   if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
     try { window.location.href = upiUri(price); } catch (e) {}
   }
-  // Hand over the link — ready the moment they come back from the app.
   onSuccess('upi_' + Date.now().toString(36));
+}
+
+function openRazorpay(order) {
+  const rzp = new Razorpay({
+    key:        order.keyId,
+    order_id:   order.orderId,
+    amount:     order.amount,
+    currency:   order.currency || 'INR',
+    name:       "Father's Day Special",
+    description:"Father's Day letter — shareable link",
+    prefill:    { name: D.senderName || '' },
+    theme:      { color: '#F0876A' },
+    handler: function (resp) {
+      // Verify the signature on the server BEFORE unlocking the link.
+      fetch('/api/verify', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(resp)
+      })
+        .then(r => r.json())
+        .then(v => {
+          if (v && v.ok) onSuccess(resp.razorpay_payment_id);
+          else showToast('Payment could not be verified', 3500);
+        })
+        .catch(() => showToast('Verification failed — please try again', 3500));
+    },
+    modal: { ondismiss: function () { showToast('Payment cancelled — no charge', 2500); } }
+  });
+  rzp.open();
 }
 
 function restoreBtn(btn, price) {
@@ -1121,7 +1170,7 @@ function onSuccess(payId) {
         papaYears:   D.papaYears,
         amount:      activePrice,
         coupon:      (document.getElementById('couponIn').value || '').trim().toUpperCase(),
-        paid:        typeof payId === 'string' && payId.indexOf('upi_') === 0,
+        paid:        typeof payId === 'string' && payId.indexOf('pay_') === 0,
         paymentRef:  payId
       })
     }).catch(() => {});

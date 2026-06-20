@@ -51,9 +51,23 @@ at console.groq.com/keys). The `/api/write` function then calls Groq; if the key
 is missing or the call fails, the site automatically falls back to the templates,
 so the button always works.
 
-## ⚠️ Important: `paid` is trust-based
-UPI on a plain website can't be auto-verified, so `paid:true` only means the
-person reached the success step — **not** that money actually arrived. To
-*truly* gate the link behind a confirmed payment, you need a payment gateway
-(Razorpay/Cashfree/PhonePe PG) with a webhook that verifies the payment
-server-side before issuing the link. Ask and I'll wire that next.
+## Required payment with Razorpay (verified)
+By default (no Razorpay keys) the site uses a simple UPI flow that **can't
+verify** payment — the link is handed over on trust. To make payment actually
+**required** (link unlocks only after a confirmed ₹20):
+
+1. Sign up at **dashboard.razorpay.com** (free).
+2. **Settings → API Keys → Generate** → copy the **Key ID** and **Key Secret**.
+   (Use **Test Mode** keys first to try it without real money. Live keys need KYC.)
+3. Add both as env vars (Vercel → Settings → Environment Variables, or local `.env`):
+   - `RAZORPAY_KEY_ID`
+   - `RAZORPAY_KEY_SECRET`
+4. Redeploy.
+
+Now clicking **Pay** opens Razorpay Checkout (UPI + cards). `/api/create-order`
+makes the order, `/api/verify` checks the signature server-side, and the link
+appears **only** if the payment is genuinely confirmed. Cancelling = no link.
+
+💰 **Where the money goes:** Razorpay settles payments to the **bank account**
+you link in your Razorpay dashboard (not directly to a personal `@ybl` VPA).
+The payer can still pay by UPI — that's just the rail.

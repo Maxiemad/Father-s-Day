@@ -19,8 +19,10 @@ const app = express();
 app.use(express.json({ limit: '1mb' }));
 
 // API routes (the exact handler files Vercel uses)
-app.all('/api/collect', require('./api/collect'));
-app.all('/api/write',   require('./api/write'));
+app.all('/api/collect',      require('./api/collect'));
+app.all('/api/write',        require('./api/write'));
+app.all('/api/create-order', require('./api/create-order'));
+app.all('/api/verify',       require('./api/verify'));
 
 // Everything else = the static site (index.html, view.html, assets, ...)
 app.use(express.static(__dirname));
