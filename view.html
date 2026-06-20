@@ -306,23 +306,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 <div id="watermark"></div>
 <div class="dd-credit">✦ art by akanksha</div>
 
-<div id="successModal">
-  <div class="success-card">
-    <span class="success-icon">🎉</span>
-    <h3>Link is ready!</h3>
-    <p>Your letter to <span id="successName">Papa</span> is wrapped and ready to send 👔</p>
-    <span id="shareLinkText" style="display:none;"></span>
-    <div class="modal-btns">
-      <button class="btn-copy" onclick="copyLink()">📋 Copy link</button>
-      <button class="btn-wa" id="waBtn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Send on WhatsApp
-      </button>
-    </div>
-    <div class="modal-pid" id="modalPid"></div>
-  </div>
-</div>
-
 <style>
 /* "dear dad" watermark + signature */
 .dd-wm{position:fixed;inset:-45%;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='124'%3E%3Ctext x='6' y='70' font-family='Georgia,serif' font-style='italic' font-size='27' fill='%23ffffff'%3Edear dad%3C/text%3E%3C/svg%3E");background-repeat:repeat;transform:rotate(-15deg);}
@@ -442,22 +425,15 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <div class="finale-from" id="finaleFrom"></div>
       <div class="finale-promise" id="finalePromise" style="display:none;"></div>
       <div class="pay-wrap" id="payWrap">
-        <div class="pay-head">Send this for real ✦</div>
-        <div class="price-row">
-          <span class="price-now" id="priceNow">₹20</span>
-          <span class="price-was" id="priceWas">₹20</span>
-          <span class="price-saved" id="priceSaved"></span>
+        <div class="pay-head">Send it to him 💌</div>
+        <div class="modal-btns">
+          <button class="btn-copy" onclick="copyLink()">📋 Copy link</button>
+          <button class="btn-wa" onclick="shareWhatsApp()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Send on WhatsApp
+          </button>
         </div>
-        <div class="coupon-row">
-          <input class="coupon-input" id="couponIn" type="text" placeholder="Have a coupon?" oninput="this.value=this.value.toUpperCase()">
-          <button class="coupon-apply" onclick="applyCoupon()">Apply</button>
-        </div>
-        <div class="coupon-msg" id="couponMsg"></div>
-        <button class="pay-btn" id="payBtn" onclick="pay()">
-          <span>💌</span>
-          <span>Pay &amp; get link <span class="pay-badge" id="payBadge">₹20</span></span>
-        </button>
-        <div class="pay-note">Opens your UPI app · your link is ready right after · no account needed</div>
+        <div class="pay-note">Free · opens in his browser · no app, no login</div>
       </div>
     </div>
   </div>
@@ -488,7 +464,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   </div>
 </div>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 /* ══════════════════════════════
    SHARE LINK — fully self-contained, no server.
@@ -1011,141 +986,12 @@ function startFinale() {
 }
 
 /* ══════════════════════════════
-   COUPON  — customize these for your own promos / influencer codes
+   SHARE — no payment, no coupon. Just copy / WhatsApp.
 ══════════════════════════════ */
-const BASE = 20;
-let activePrice = BASE;
-document.getElementById('payBadge').textContent = '₹' + BASE;
-document.getElementById('priceNow').textContent = '₹' + BASE;
+let shareLink = '';
 
-const COUPONS = {
-  // QTPAPA → free shareable link. Without it, the user has to pay.
-  'QTPAPA': { price: 0, label: 'Free link 💛' },
-};
-
-function applyCoupon() {
-  const code  = (document.getElementById('couponIn').value || '').trim().toUpperCase();
-  const msg   = document.getElementById('couponMsg');
-  const now   = document.getElementById('priceNow');
-  const was   = document.getElementById('priceWas');
-  const saved = document.getElementById('priceSaved');
-  const badge = document.getElementById('payBadge');
-  if (!code) { msg.className = 'coupon-msg'; msg.textContent = ''; return; }
-  if (COUPONS[code]) {
-    const c = COUPONS[code];
-    activePrice = c.price;
-    now.textContent   = c.price === 0 ? 'Free!' : '₹' + c.price;
-    was.textContent   = '₹' + BASE;
-    was.style.display = 'inline';
-    saved.textContent = c.label;
-    saved.style.display = 'inline';
-    badge.textContent   = c.price === 0 ? 'Free' : '₹' + c.price;
-    msg.className = 'coupon-msg ok';
-    msg.textContent = '✓ Applied!';
-  } else {
-    activePrice = BASE;
-    now.textContent     = '₹' + BASE;
-    was.style.display   = 'none';
-    saved.style.display = 'none';
-    badge.textContent   = '₹' + BASE;
-    msg.className = 'coupon-msg err';
-    msg.textContent = '✗ Invalid code';
-  }
-}
-
-/* ══════════════════════════════
-   PAYMENT
-══════════════════════════════ */
-/* ── UPI payment — pays straight to the host's UPI ID ── */
-const UPI_VPA  = '8271342331@ybl';
-const UPI_NAME = "Father's Day Special";
-let paying     = false;
-
-function upiUri(amount) {
-  return 'upi://pay?pa=' + encodeURIComponent(UPI_VPA) +
-         '&pn=' + encodeURIComponent(UPI_NAME) +
-         '&am=' + encodeURIComponent(amount) +
-         '&cu=INR&tn=' + encodeURIComponent("Father's Day letter");
-}
-
-async function pay() {
-  if (paying) return;
-  const price = activePrice;
-  // Free (QTPAPA coupon) → straight to the link, no payment.
-  if (price === 0) { onSuccess('free'); return; }
-  paying = true;
-
-  // Try the real gateway first — the link unlocks ONLY after a verified payment.
-  try {
-    const r = await fetch('/api/create-order', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: price })
-    });
-    if (r.ok) {
-      const o = await r.json();
-      if (o.ok && o.orderId && o.keyId && window.Razorpay) {
-        paying = false;
-        openRazorpay(o);
-        return;
-      }
-    }
-  } catch (e) {}
-
-  // Gateway not set up yet → fall back to direct UPI (trust-based).
-  paying = false;
-  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    try { window.location.href = upiUri(price); } catch (e) {}
-  }
-  onSuccess('upi_' + Date.now().toString(36));
-}
-
-function openRazorpay(order) {
-  const rzp = new Razorpay({
-    key:        order.keyId,
-    order_id:   order.orderId,
-    amount:     order.amount,
-    currency:   order.currency || 'INR',
-    name:       "Father's Day Special",
-    description:"Father's Day letter — shareable link",
-    prefill:    { name: D.senderName || '' },
-    theme:      { color: '#F0876A' },
-    handler: function (resp) {
-      // Verify the signature on the server BEFORE unlocking the link.
-      fetch('/api/verify', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(resp)
-      })
-        .then(r => r.json())
-        .then(v => {
-          if (v && v.ok) onSuccess(resp.razorpay_payment_id);
-          else showToast('Payment could not be verified', 3500);
-        })
-        .catch(() => showToast('Verification failed — please try again', 3500));
-    },
-    modal: { ondismiss: function () { showToast('Payment cancelled — no charge', 2500); } }
-  });
-  rzp.open();
-}
-
-function restoreBtn(btn, price) {
-  if (!btn) return;
-  btn.disabled = false;
-  const label = (!price || price === 0) ? 'Free' : '₹' + price;
-  const verb  = (!price || price === 0) ? 'Get link' : 'Pay &amp; get link';
-  btn.innerHTML = `<span>💌</span><span>${verb} <span class="pay-badge">${label}</span></span>`;
-}
-
-function demoSuccess() {
-  onSuccess('demo_' + Math.random().toString(36).substr(2, 9));
-}
-
-function onSuccess(payId) {
-  paying = false;
-  const btn = document.getElementById('payBtn');
-
-  // Pack the whole letter into the link — no server, nothing stored anywhere.
+function buildShareLink() {
+  if (shareLink) return shareLink;
   const payload = {
     relation:    D.relation,
     senderName:  D.senderName,
@@ -1154,10 +1000,10 @@ function onSuccess(payId) {
     papaYears:   D.papaYears,
     promise:     D.promise || ''
   };
-  const shareLink = location.origin + location.pathname + '?d=' + encodeShare(payload);
+  shareLink = location.origin + location.pathname + '?d=' + encodeShare(payload);
 
-  // Log this order to MongoDB via /api/collect (active once deployed — see SETUP.md).
-  // Fire-and-forget: if the endpoint isn't there (e.g. local/static), it's a silent no-op.
+  // Log the letter to MongoDB via /api/collect (active once deployed — see SETUP.md).
+  // Fire-and-forget: silent no-op if the endpoint isn't there.
   try {
     fetch('/api/collect', {
       method:  'POST',
@@ -1168,27 +1014,18 @@ function onSuccess(payId) {
         mainMessage: D.mainMessage,
         promise:     D.promise || '',
         papaYears:   D.papaYears,
-        amount:      activePrice,
-        coupon:      (document.getElementById('couponIn').value || '').trim().toUpperCase(),
-        paid:        typeof payId === 'string' && payId.indexOf('pay_') === 0,
-        paymentRef:  payId
+        paymentRef:  'free'
       })
     }).catch(() => {});
   } catch (e) {}
 
-  if (btn) restoreBtn(btn, activePrice);
-  document.getElementById('shareLinkText').textContent = shareLink;
-  document.getElementById('successName').textContent   = D.relation;
-  document.getElementById('modalPid').textContent      = '✦ made with love';
-  const wa = encodeURIComponent('🎉 Wrote you something for Father\'s Day, ' + D.relation + '! Open this: ' + shareLink);
-  document.getElementById('waBtn').onclick = () => window.open('https://wa.me/?text=' + wa, '_blank');
-  document.getElementById('successModal').classList.add('show');
+  return shareLink;
 }
 
 function copyLink() {
-  const url = document.getElementById('shareLinkText').textContent;
+  const url = buildShareLink();
   navigator.clipboard.writeText(url)
-    .then(() => showToast('✓ Copied!'))
+    .then(() => showToast('✓ Link copied!'))
     .catch(() => {
       const ta = document.createElement('textarea');
       ta.value = url;
@@ -1197,8 +1034,14 @@ function copyLink() {
       ta.select();
       document.execCommand('copy');
       ta.remove();
-      showToast('✓ Copied!');
+      showToast('✓ Link copied!');
     });
+}
+
+function shareWhatsApp() {
+  const url = buildShareLink();
+  const wa = encodeURIComponent('🎉 Wrote you something for Father\'s Day, ' + D.relation + '! Open this: ' + url);
+  window.open('https://wa.me/?text=' + wa, '_blank');
 }
 
 let toastT;
