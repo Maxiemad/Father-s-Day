@@ -29,5 +29,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`\n  💌  Father's Day Special  →  http://localhost:${PORT}`);
   console.log(`  MongoDB: ${process.env.MONGODB_URI ? 'configured ✓' : 'NOT set — add MONGODB_URI to .env'}`);
-  console.log(`  AI:      ${process.env.ANTHROPIC_API_KEY ? 'configured ✓' : 'off (templates) — add ANTHROPIC_API_KEY to enable'}\n`);
+  console.log(`  AI:      ${process.env.GROQ_API_KEY ? 'configured ✓' : 'off (templates) — add GROQ_API_KEY to enable'}\n`);
 });

@@ -1,9 +1,12 @@
 /* ─────────────────────────────────────────────────────────────
-   /api/write  —  real AI message writing (Anthropic / Claude)
-   Active once you set ANTHROPIC_API_KEY in Vercel env vars.
+   /api/write  —  real AI message writing (Groq — free & fast)
+   Active once you set GROQ_API_KEY in your env (.env locally,
+   or Vercel env vars in production).
    If the key is missing or the call fails, this returns an error
    and the website falls back to its built-in templates — so the
    "Write it for me" button always works either way.
+
+   Get a free key at: console.groq.com/keys
    ───────────────────────────────────────────────────────────── */
 
 module.exports = async (req, res) => {
@@ -13,7 +16,7 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'POST only' });
 
-  const key = process.env.ANTHROPIC_API_KEY;
+  const key = process.env.GROQ_API_KEY;
   if (!key) return res.status(503).json({ ok: false, error: 'AI not configured' });
 
   try {
@@ -36,17 +39,21 @@ Tone: ${toneGuide}.
 They call him "${relation}".${name ? ` It is from ${name}.` : ''}${years ? ` He has been a dad for about ${years} years.` : ''}
 Write ONLY the message text — no preamble, no surrounding quotes, no sign-off line. Sound like a real person, specific and from the heart. You may end with one tasteful emoji.`;
 
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'content-type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01'
+        'content-type':  'application/json',
+        'authorization': 'Bearer ' + key
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        // If this model is ever retired, swap it for another from console.groq.com/docs/models
+        model: 'llama-3.3-70b-versatile',
         max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }]
+        temperature: 0.9,
+        messages: [
+          { role: 'system', content: 'You write short, heartfelt Father\'s Day messages. Output only the message text, nothing else.' },
+          { role: 'user',   content: prompt }
+        ]
       })
     });
 
@@ -55,7 +62,7 @@ Write ONLY the message text — no preamble, no surrounding quotes, no sign-off 
       return res.status(502).json({ ok: false, error: 'AI upstream error', detail: t.slice(0, 200) });
     }
     const data = await r.json();
-    const text = ((data.content && data.content[0] && data.content[0].text) || '').trim();
+    const text = ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '').trim();
     if (!text) return res.status(502).json({ ok: false, error: 'empty response' });
     return res.status(200).json({ ok: true, message: text });
   } catch (e) {
