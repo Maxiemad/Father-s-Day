@@ -2,8 +2,13 @@
   "name": "fathers-day-special",
   "version": "1.0.0",
   "private": true,
-  "description": "Father's Day Special — a letter + surprise builder. Static site with a serverless /api/collect endpoint that logs orders to MongoDB.",
+  "description": "Father's Day Special — a letter + surprise builder. Static site with serverless /api endpoints that log orders to MongoDB and write messages with Claude.",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "mongodb": "^6.12.0"
   }
 }
