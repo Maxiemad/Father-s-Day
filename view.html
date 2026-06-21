@@ -988,10 +988,10 @@ function startFinale() {
 /* ══════════════════════════════
    SHARE — no payment, no coupon. Just copy / WhatsApp.
 ══════════════════════════════ */
-let shareLink = '';
+let logged = false;
 
 function buildShareLink() {
-  if (shareLink) return shareLink;
+  // ALWAYS rebuild from the current letter — never reuse a stale link.
   const payload = {
     relation:    D.relation,
     senderName:  D.senderName,
@@ -1000,7 +1000,10 @@ function buildShareLink() {
     papaYears:   D.papaYears,
     promise:     D.promise || ''
   };
-  shareLink = location.origin + location.pathname + '?d=' + encodeShare(payload);
+  const link = location.origin + location.pathname + '?d=' + encodeShare(payload);
+
+  if (logged) return link;
+  logged = true;
 
   // Log the letter to MongoDB via /api/collect (active once deployed — see SETUP.md).
   // Fire-and-forget: silent no-op if the endpoint isn't there.
@@ -1019,7 +1022,7 @@ function buildShareLink() {
     }).catch(() => {});
   } catch (e) {}
 
-  return shareLink;
+  return link;
 }
 
 function copyLink() {
@@ -1052,6 +1055,10 @@ function showToast(msg, d = 2400) {
   clearTimeout(toastT);
   toastT = setTimeout(() => t.classList.remove('show'), d);
 }
+
+// If the page is restored from the mobile back/forward cache, reload so the
+// letter + link always reflect the latest build (never a stale one).
+window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
 
 init();
 
