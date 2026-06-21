@@ -314,6 +314,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .finale-promise{flex-direction:column;align-items:center;gap:4px;margin-top:16px;padding:13px 20px;background:rgba(255,251,244,.72);border:1.5px dashed var(--brass);border-radius:16px;max-width:300px;box-shadow:0 8px 22px rgba(120,80,40,.12);animation:doneIn .6s cubic-bezier(.34,1.4,.64,1);}
 .fp-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-dark);}
 .fp-text{font-family:'Fraunces',serif;font-style:italic;font-size:1.02rem;color:var(--ink);line-height:1.5;text-align:center;}
+/* share-the-site (visible to everyone, incl. recipients) */
+.share-site{margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+.ss-text{font-size:.8rem;color:var(--ink-soft);}
+.btn-sharesite{font-family:'Work Sans',sans-serif;font-size:.84rem;font-weight:600;color:var(--brass-dark);background:rgba(255,251,244,.72);border:1.5px solid var(--brass);border-radius:100px;padding:9px 20px;cursor:pointer;transition:all .18s;}
+.btn-sharesite:hover{background:var(--brass);color:#fff;transform:translateY(-1px);}
 /* tap-to-spread-love hearts */
 .tap-heart{position:fixed;z-index:8000;pointer-events:none;font-size:1.4rem;will-change:transform,opacity;animation:tapHeart 1s ease-out forwards;}
 @keyframes tapHeart{0%{opacity:.95;transform:translate(-50%,-50%) scale(.5) rotate(0deg);}100%{opacity:0;transform:translate(-50%,-150px) scale(1.35) rotate(18deg);}}
@@ -435,6 +440,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
         </div>
         <div class="pay-note">Free · opens in his browser · no app, no login</div>
       </div>
+      <div class="share-site">
+        <span class="ss-text">💛 Loved it? Make one for your dad too</span>
+        <button class="btn-sharesite" onclick="shareSite()">↗ Share this site with friends</button>
+      </div>
     </div>
   </div>
 </div>
@@ -484,8 +493,9 @@ function decodeShare(str) {
    DATA & MODE
 ══════════════════════════════ */
 const params     = new URLSearchParams(location.search);
+const idParam    = params.get('id');
 const sharedData = params.get('d');
-const isShared   = !!sharedData;
+const isShared   = !!(idParam || sharedData);
 
 const DEFAULT_MSGS = [
   'He\'s home before you even text "where are you" 📍',
@@ -550,10 +560,18 @@ function preloadGifs() {
 /* ══════════════════════════════
    INIT
 ══════════════════════════════ */
+async function fetchLetter(id) {
+  const r = await fetch('/api/letter?id=' + encodeURIComponent(id));
+  if (!r.ok) throw new Error('not found');
+  const d = await r.json();
+  if (!d.ok || !d.letter) throw new Error('not found');
+  return d.letter;
+}
+
 async function init() {
   if (isShared) {
     try {
-      const fetched = decodeShare(sharedData);
+      const fetched = idParam ? await fetchLetter(idParam) : decodeShare(sharedData);
       D = { ...D, ...fetched };
       hideLoad(); startApp(true);
     } catch(e) {
@@ -983,15 +1001,17 @@ function startFinale() {
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 8000);
   }
+
+  // Creator only: pre-build the share link (short ?id= once saved) so Copy/WhatsApp are instant.
+  if (!isShared) prepareLink();
 }
 
 /* ══════════════════════════════
    SHARE — no payment, no coupon. Just copy / WhatsApp.
 ══════════════════════════════ */
-let logged = false;
+let shareLink = '';   // long ?d= link immediately; upgraded to a short ?id= when saved
 
-function buildShareLink() {
-  // ALWAYS rebuild from the current letter — never reuse a stale link.
+function prepareLink() {
   const payload = {
     relation:    D.relation,
     senderName:  D.senderName,
@@ -1000,38 +1020,28 @@ function buildShareLink() {
     papaYears:   D.papaYears,
     promise:     D.promise || ''
   };
-  const link = location.origin + location.pathname + '?d=' + encodeShare(payload);
+  // Immediate self-contained fallback (works with no backend — just a long URL).
+  shareLink = location.origin + location.pathname + '?d=' + encodeShare(payload);
 
-  if (logged) return link;
-  logged = true;
-
-  // Log the letter to MongoDB via /api/collect (active once deployed — see SETUP.md).
-  // Fire-and-forget: silent no-op if the endpoint isn't there.
-  try {
-    fetch('/api/collect', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        relation:    D.relation,
-        senderName:  D.senderName,
-        mainMessage: D.mainMessage,
-        promise:     D.promise || '',
-        papaYears:   D.papaYears,
-        paymentRef:  'free'
-      })
-    }).catch(() => {});
-  } catch (e) {}
-
-  return link;
+  // Upgrade to a SHORT, share-safe link by saving the letter to MongoDB.
+  // (Also logs the order.) If the backend isn't there, we keep the long link.
+  fetch('/api/collect', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(r => (r.ok ? r.json() : null))
+    .then(d => { if (d && d.ok && d.id) shareLink = location.origin + location.pathname + '?id=' + d.id; })
+    .catch(() => {});
 }
 
 function copyLink() {
-  const url = buildShareLink();
-  navigator.clipboard.writeText(url)
+  if (!shareLink) prepareLink();
+  navigator.clipboard.writeText(shareLink)
     .then(() => showToast('✓ Link copied!'))
     .catch(() => {
       const ta = document.createElement('textarea');
-      ta.value = url;
+      ta.value = shareLink;
       ta.style.cssText = 'position:fixed;opacity:0;';
       document.body.appendChild(ta);
       ta.select();
@@ -1041,8 +1051,16 @@ function copyLink() {
     });
 }
 
+// Share the website itself, so friends can make their own.
+function shareSite() {
+  const site = location.origin + '/';
+  const msg  = encodeURIComponent('💌 Make a Father\'s Day letter for your dad — it\'s the cutest! ' + site);
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+
 function shareWhatsApp() {
-  const url = buildShareLink();
+  if (!shareLink) prepareLink();
+  const url = shareLink;
   const wa = encodeURIComponent('🎉 Wrote you something for Father\'s Day, ' + D.relation + '! Open this: ' + url);
   window.open('https://wa.me/?text=' + wa, '_blank');
 }

@@ -48,10 +48,7 @@ module.exports = async (req, res) => {
       mainMessage: String(b.mainMessage  || '').slice(0, 2000),
       promise:     String(b.promise      || '').slice(0, 200),
       papaYears:   Number(b.papaYears) || 0,
-      amount:      Number(b.amount)    || 0,
-      coupon:      String(b.coupon || '').slice(0, 40),
-      paid:        b.paid === true,                 // NOTE: trust-based, not gateway-verified
-      paymentRef:  String(b.paymentRef || '').slice(0, 80),
+      msgs:        Array.isArray(b.msgs) ? b.msgs.slice(0, 8).map(m => String(m).slice(0, 200)) : [],
       userAgent:   String(req.headers['user-agent'] || '').slice(0, 300),
       createdAt:   new Date()
     };

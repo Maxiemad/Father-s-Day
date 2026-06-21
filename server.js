@@ -20,6 +20,7 @@ app.use(express.json({ limit: '1mb' }));
 
 // API routes (the exact handler files Vercel uses)
 app.all('/api/collect',      require('./api/collect'));
+app.all('/api/letter',       require('./api/letter'));
 app.all('/api/write',        require('./api/write'));
 app.all('/api/create-order', require('./api/create-order'));
 app.all('/api/verify',       require('./api/verify'));
