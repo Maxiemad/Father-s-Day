@@ -4,7 +4,7 @@
   "private": true,
   "description": "Father's Day Special — a letter + surprise builder. Static site with serverless /api endpoints that log orders to MongoDB and write messages with Claude.",
   "scripts": {
-    "start": "node server.js"
+    "dev": "node server.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

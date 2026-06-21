@@ -6,7 +6,7 @@
      1) Fill in .env  (MONGODB_URI = your full Atlas string with the
         real password; optional ANTHROPIC_API_KEY for real AI)
      2) npm install
-     3) npm start      →  open http://localhost:3000
+     3) npm run dev    →  open http://localhost:3000
 
    The SAME api/ files run on Vercel in production — this is just
    for running and testing locally.
